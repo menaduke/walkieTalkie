@@ -7,11 +7,10 @@ var Users = require('./db/schema/User.js')
 var ActiveUsers = require('./db/schema/ActiveUsers.js')
 var Interest = require('./db/schema/Interests.js')
 var UserInterests = require('./db/schema/UserInterests.js')
-var PrivateUsers = require('./db/schema/PrivateUsers.js')
 var dataHandler = require('./db/data_handler.js')
 var http = require('http');
 var socketIo = require('socket.io');
-var port = 3000
+var port = process.env.PORT || 3000;
 
 var app = express()
 // app.locals['activeSocket'] = {}
@@ -41,7 +40,7 @@ app.get('/checkSession', (req, res) => {
 });
 
 app.get('/getActiveUsers', (req, res) => {
-  dataHandler.getActiveUsers(req.query.roomId, (error, result) => {
+  dataHandler.getActiveUsers(req.query.roomId, req.query.userId, (error, result) => {
     if (error) {
       res.status(500).send(error);
     } else {
@@ -106,21 +105,31 @@ app.get('/findLocalRoom', (req, res) => {
 })
 
 app.get('/findCommonUser', (req, res) => {
-  dataHandler.findCommonUser(req.session.userId, (error, result, commonInterests) => {
+  dataHandler.getUserInterests(req.session.userId, (error, result) => {
     if (error) {
       res.status(500).send(error);
+    } else if (result.length === 0) {
+      res.status(200).json({'hasNoInterests' : true})
     } else {
-      req.session.roomId = result;
-      res.status(200).json({'roomId' : result, 'interests' : commonInterests});
-    } 
+      dataHandler.findCommonUser(req.session.userId, (error, result, commonInterests) => {
+        if (error) {
+          res.status(500).send(error);
+        } else {
+          req.session.roomId = result;
+          res.status(200).json({'roomId' : result, 'interests' : commonInterests});
+        } 
+      })
+    }
   })
 });
 
 app.post('/signup', (req, res) => {
   dataHandler.createUser(req.body, (error, result) => {
-    if (error) {
+    if (error.invalid) {
+      res.status(200).json(error);
+    } else if (error) {
       res.status(500).send(error);
-    } else {
+    }else {
       req.session.userId = result.id;
       req.session.userName = result.firstname;
       res.status(200).json(result);
@@ -130,9 +139,11 @@ app.post('/signup', (req, res) => {
 
 app.post('/login', (req, res) => {
   dataHandler.userLogin(req.body.email, req.body.password, (error, result) => {
-    if (error) {
+    if (error.invalid) {
+      res.status(200).json(error);
+    } else if (error) {
       res.status(500).send(error);
-    } else {
+    }else {
       req.session.userId = result.id;
       req.session.userName = result.firstname;
       res.status(200).json(result);
@@ -191,6 +202,7 @@ io.on('connection', socket => {
   //listening for and joining room
   socket.on('join room', room => {
     console.log('joining room ', room);
+    socket.broadcast.to(room).emit('update user list');
     socket.join(room);
   })
 
@@ -221,6 +233,7 @@ io.on('connection', socket => {
   //listening for a request to leave current room
   socket.on('leaveRoom', room => {
     console.log("leaving room ", room);
+    socket.broadcast.to(room).emit('update user list');
     //leaving current room
     socket.leave(room);
   })
@@ -231,10 +244,10 @@ io.on('connection', socket => {
     socket.broadcast.to(pcData.sender).emit('declined', pcData)
   })
   // console.log('this is the object keys: ', Object.keys(io.sockets.sockets));
-  // socket.on('disconnect', () => {
-  //   console.log('this is this in disconnect: ', this)
-  //   console.log('this is the this.id in disconnect: ', this.id);
-  // })
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+    io.emit('update user list');
+  })
 })
 
 database.sync()

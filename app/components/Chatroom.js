@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
 import ChatLine from './ChatLineItem';
+import UserItem from './UserItem';
 import ChatJoinModal from './ChatJoinModal.js'
 import io from 'socket.io-client';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import { Alert } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
+import { Grid } from 'react-bootstrap';
+import { Panel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import { FormGroup } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
 
 class Chatroom extends Component {
   constructor(props){
@@ -14,29 +22,45 @@ class Chatroom extends Component {
       messages: [],
       showRequest: false,
       rejected: false,
-      pcData: {}
+      pcData: {},
+      newMessage: '',
+      roommates: [],
+      userSockets: {}
     }
     this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
-    this.componentWillMount = this.componentWillMount.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
     this.handlePrivateChat = this.handlePrivateChat.bind(this);
     this.acceptPrivateChat = this.acceptPrivateChat.bind(this);
     this.declinePrivateChat = this.declinePrivateChat.bind(this);
     this.acceptRejection = this.acceptRejection.bind(this);
     this.joinPrivate = this.joinPrivate.bind(this);
     this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this);
-  }
+    this.handleNewMessage = this.handleNewMessage.bind(this);
+    this.getRoommates = this.getRoommates.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
+    }
 
-  componentWillMount() {
+  componentDidMount() {
     //creating a socket connection
     this.socket = io('/');
 
     //join a room upon connection
     this.socket.emit('join room', this.props.roomId);
 
+    this.socket.on('update user list', () => {
+      this.getRoommates();
+    })
+
     //listener for any incoming messages and re-setting the state
     this.socket.on('message', message => {
+        var activeSockets = this.state.userSockets;
+        if (!activeSockets.hasOwnProperty(message.user)) {
+          activeSockets[message.user] = message.socketId;
+        }
+      
       this.setState({
-        messages: [message, ...this.state.messages].slice(0, 50)
+        messages: [...this.state.messages, message].slice(0, 50),
+        userSockets : activeSockets
       });
     });
 
@@ -57,23 +81,57 @@ class Chatroom extends Component {
     //listener for sender to see their offer has been declined
     this.socket.on('declined', pcData => {
       this.setState({
-        pcData: {},
+        pcData,
         rejected: true
       })
     })
+
+    //get roommates when initially joining chatroom
+    this.getRoommates()
   };
+
+  componentWillUnmount() {
+    this.socket.emit('leaveRoom', this.props.roomId);
+  }
 
   //join new room when the new props (roomId) have been passed down
   componentWillReceiveProps(nextProps) {
     if(nextProps.roomId !== this.props.roomId) {
       this.socket.emit('join room', nextProps.roomId);
+      this.getRoommates(nextProps.roomId);
     }
   }
 
+  //get updated roommate list when new user joins
+  getRoommates(newRoom) {
+    var currentRoom = newRoom || this.props.roomId
+    axios.get('/getActiveUsers', { params : {
+      roomId: currentRoom,
+      userId: this.props.userId
+    }})
+    .then(res => {
+      this.setState({
+        roommates: res.data
+      })
+    })
+    .catch(err => {
+      console.log('error in getting roommates: ', err);
+    })
+  }
+
+  //handle new message input
+
+  handleNewMessage(event) {
+    this.setState({
+      newMessage: event.target.value
+    })
+  };
+
   //handle all message submissions
   handleMessageSubmit(event) {
-    var body = event.target.value;
-    if(event.keyCode === 13 && body) {
+    event.preventDefault();
+    var body = this.state.newMessage;
+    if (body) {
       var message = {
         body,
         from: this.props.name,
@@ -82,11 +140,11 @@ class Chatroom extends Component {
         socketId: this.socket.json.id
       };
       this.setState({
-        messages: [message, ...this.state.messages].slice(0, 50)
+        messages: [...this.state.messages, message].slice(0, 50),
+        newMessage: ''
       });
       //sending message to the server
       this.socket.emit('message', message);
-      event.target.value = '';
     }
   }
 
@@ -128,6 +186,7 @@ class Chatroom extends Component {
   declinePrivateChat() {
     this.socket.emit('declineRequest', this.state.pcData);
     this.setState({
+      pcData: {},
       showRequest: false
     });
   };
@@ -156,16 +215,19 @@ class Chatroom extends Component {
   //close rejection modal
   acceptRejection() {
     this.setState({
+      pcData: {},
       rejected: false
     });
   };
 
   render(){
-
-    if (this.prop)
-    var messages = this.state.messages.map((message, index) => {
-      return <ul key={index}><ChatLine message={message} privateChat={this.handlePrivateChat}/></ul>
-    })
+    var messages = this.state.messages
+    var roomTitle = '';
+    if (typeof this.props.roomId === 'number') {
+      roomTitle = "Room " + this.props.roomId;
+    } else {
+      roomTitle = "Private Chat";
+    }
 
       return (
       <div>
@@ -189,10 +251,58 @@ class Chatroom extends Component {
             <Button onClick={this.acceptRejection}>OK</Button>
           </Modal.Body>
         </Modal>
+        
+        <Grid>
+          <Row>
+            <Col xs={12} md={12}>
+            <Panel header={roomTitle}>
+              <div id="fixedPanel">
+                <Row>
+                  <Col xs={2} md={2}>
+                    <div>
+                      {
+                        this.state.roommates.map(user => {
+                          var tempSocketId = this.state.userSockets[user.id]
+                          return <UserItem 
+                                  key={user.id} 
+                                  user={user} 
+                                  privateChat={this.handlePrivateChat}
+                                  socketId={tempSocketId}/>
+                        })
+                      }
+                    </div>
+                  </Col>
+                  
+                  <Col xsOffset={1} mdOffset={1} xs={9} md={9}>
+                    <div id="chatbox">
+                    {messages.map((message, index) =>
+                      <Row key={index}>
+                        <Col xs={12} md={12}>
+                          <ChatLine
+                            message={message}
+                            privateChat={this.handlePrivateChat}/>
+                        </Col>
+                      </Row>
+                    )}
+                    </div>
+                  </Col>
 
-        {messages}
-        <input type="text" placeholder="Enter a Message" onKeyUp={this.handleMessageSubmit} />
+                  <Col xsOffset={3} mdOffset={3} xs={9} md={9}>
+                    <Form onSubmit={this.handleMessageSubmit}>
+                      <FormGroup>
+                        <FormControl type="text" placeholder="Enter a Message" value={this.state.newMessage} onChange={this.handleNewMessage}/>
+                      </FormGroup>
+                    </Form>
+                  </Col>
+                </Row>
+              </div>
+            </Panel>
+            </Col>
+          </Row>
+        </Grid>
+        
         <div>
+        
         {
           this.props.searchResults ? 
           (
@@ -201,6 +311,7 @@ class Chatroom extends Component {
           <div></div>
         }
         </div>
+
       </div>
     )
     }
