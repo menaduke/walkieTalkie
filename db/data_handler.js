@@ -298,7 +298,6 @@ module.exports.findCommonUser = (user, cb) => {
 }
 
 module.exports.getActiveUsers = (inputRoomId, userId, cb) => {
-  console.log(inputRoomId, userId);
   db.query('select u.firstname, u.id from Users u join ActiveUsers au on u.id = au.userId where au.roomId = ? and u.id != ? and au.roomId !=0 order by u.firstname ASC',
   {replacements : [inputRoomId, userId], type : sequelize.QueryTypes.SELECT})
   .then(userList => {
@@ -307,4 +306,15 @@ module.exports.getActiveUsers = (inputRoomId, userId, cb) => {
   .catch(error => {
     cb(error);
   })
+}
+
+module.exports.getMapLocations = (cb) => {
+  db.query('select latitude as lat, longitude as lng from ActiveUsers', 
+    {type : sequelize.QueryTypes.SELECT})
+    .then(locations => {
+      cb(false, locations);
+    })
+    .catch(error => {
+      cb(error);
+    })
 }

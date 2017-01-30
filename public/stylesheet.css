@@ -75,4 +75,37 @@ button {
   overflow-x: hidden;
   height: 500px;
   width: 100%;
+  background-color: lightblue;
+  font-family: "Ubuntu-Italic", "Lucida Sans", helvetica, sans;
+    box-shadow:
+  inset 0 .3em 0.5em -0.2em rgba(255,255,255,0.6),
+  0 0.3em 0.5em -0.2em rgba(100,100,100,1),
+  0 1em 2em -0.75em rgba(100,100,100,0.75),
+  0 1em 3em -0.5em rgba(100,100,100,0.5),
+  0 3em 3em -0.25em rgba(100,100,100,0.2);
+  border-radius: 5px;
+  padding: 2em;
 }
+
+.talk-bubble {
+	margin: 5px;
+  display: inline-block;
+  position: relative;
+	width: auto;
+	height: auto;
+	background-color: lightyellow;
+
+}
+
+
+
+.outerPanel {
+      box-shadow:
+  inset 0 .3em 0.5em -0.2em rgba(255,255,255,0.6),
+  0 0.3em 0.5em -0.2em rgba(100,100,100,1),
+  0 1em 2em -0.75em rgba(100,100,100,0.75),
+  0 1em 3em -0.5em rgba(100,100,100,0.5),
+  0 3em 3em -0.25em rgba(100,100,100,0.2);
+}
+
+

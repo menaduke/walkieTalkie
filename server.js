@@ -87,6 +87,16 @@ app.get('/findGlobalRoom', (req, res) => {
   })
 })
 
+app.get('/mapLocations', (req, res) => {
+  dataHandler.getMapLocations((error, result) => {
+    console.log(error, result);
+    if(error){
+      res.status(500).send(error);
+    } else {
+      res.status(200).json(result);
+    }
+  })
+})
 app.get('/findLocalRoom', (req, res) => {
  dataHandler.createSession(req.session.userId, req.query.latitude, req.query.longitude)
  .then(sessionCreated => {
@@ -245,7 +255,6 @@ io.on('connection', socket => {
   })
   // console.log('this is the object keys: ', Object.keys(io.sockets.sockets));
   socket.on('disconnect', () => {
-    console.log('user disconnected');
     io.emit('update user list');
   })
 })

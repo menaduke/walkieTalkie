@@ -5,6 +5,7 @@ import ViewNavBar from './ViewNavbar.js';
 import Chatroom from './Chatroom.js';
 import ChatSelection from './ChatSelection.js';
 
+
 class App extends React.Component {
   constructor(props){
     super(props)
@@ -38,7 +39,7 @@ class App extends React.Component {
           login_signup_view : false,
           chat_view : true
         })
-      } else {
+      } else { 
         this.setState({
           userId : res.data.id,
           name : res.data.firstname,
@@ -86,8 +87,7 @@ class App extends React.Component {
    this.setState({
      roomId : inputRoomId,
      roomSearch : {'option' : searchOptions, 'res' : result},
-     chat_view : true,
-     map_view : false
+     chat_view : true
    })
  }
 
@@ -112,6 +112,7 @@ class App extends React.Component {
      roomId : newRoom,
    })
  }
+
 
   render() {
     return (
