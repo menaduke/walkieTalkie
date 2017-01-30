@@ -300,7 +300,7 @@ class Chatroom extends Component {
                     </div>
                   </Col>
 
-                  <Col xsOffset={3} mdOffset={3} xs={9} md={9}>
+                  <Col xsOffset={3} mdOffset={2} xs={9} md={9}>
                     <Form onSubmit={this.handleMessageSubmit}>
                       <FormGroup>
                         <FormControl type="text" placeholder="Enter a Message" value={this.state.newMessage} onChange={this.handleNewMessage}/>

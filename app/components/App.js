@@ -16,8 +16,7 @@ class App extends React.Component {
       roomSearch : null,
       login_signup_view : true,
       chat_view : false,
-      mounted : false,
-      map_view : false
+      mounted : false
     }
     this.componentWillMount = this.componentWillMount.bind(this);
     this.handleUserSignupLogin = this.handleUserSignupLogin.bind(this);
@@ -25,7 +24,6 @@ class App extends React.Component {
     this.handleChatSelection = this.handleChatSelection.bind(this);
     this.handleChatExit = this.handleChatExit.bind(this);
     this.handleRoomChange = this.handleRoomChange.bind(this);
-    this.handleMapView = this.handleMapView.bind(this);
   }
 
   componentWillMount(){
@@ -89,8 +87,7 @@ class App extends React.Component {
    this.setState({
      roomId : inputRoomId,
      roomSearch : {'option' : searchOptions, 'res' : result},
-     chat_view : true,
-     map_view : false
+     chat_view : true
    })
  }
 
@@ -116,11 +113,6 @@ class App extends React.Component {
    })
  }
 
- handleMapView(){
-   this.setState({
-     map_view : !this.state.map_view
-   })
- }
 
   render() {
     return (
