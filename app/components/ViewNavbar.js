@@ -22,18 +22,17 @@ class ViewNavBar extends Component {
   render(){
   return (
   <Navbar inverse collapseOnSelect>
+    <Navbar.Header>
+      <Navbar.Brand>walkieTalkie</Navbar.Brand>
+      <Navbar.Toggle />
+    </Navbar.Header>
       {this.props.userId ?
         <div>    
-          <Navbar.Header>
-              <Navbar.Brand>
-                walkieTalkie
-              </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
               <NavItem onClick={this.props.home}>Home</NavItem>
               <NavItem onClick={this.toggleModal}>Interest</NavItem>
+              <NavItem onClick={this.props.toggleMap}>Map</NavItem>
             </Nav>
             <Nav pullRight>
               <NavItem onClick={this.props.logout}>Logout</NavItem>
