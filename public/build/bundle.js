@@ -42832,6 +42832,8 @@
 	    _this.handleNewMessage = _this.handleNewMessage.bind(_this);
 	    _this.getRoommates = _this.getRoommates.bind(_this);
 	    _this.componentWillUnmount = _this.componentWillUnmount.bind(_this);
+	    _this.scrollToBottom = _this.scrollToBottom.bind(_this);
+	    _this.componentDidUpdate = _this.componentDidUpdate.bind(_this);
 	    return _this;
 	  }
 
@@ -42903,6 +42905,19 @@
 	        this.socket.emit('join room', nextProps.roomId);
 	        this.getRoommates(nextProps.roomId);
 	      }
+	    }
+	  }, {
+	    key: 'scrollToBottom',
+	    value: function scrollToBottom() {
+	      var scrollHeight = this.chatList.scrollHeight;
+	      var height = this.chatList.clientHeight;
+	      var maxScrollTop = scrollHeight - height;
+	      this.chatList.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this.scrollToBottom();
 	    }
 
 	    //get updated roommate list when new user joins
@@ -43160,7 +43175,9 @@
 	                      { xsOffset: 1, mdOffset: 1, xs: 9, md: 9 },
 	                      _react2.default.createElement(
 	                        'div',
-	                        { id: 'chatbox' },
+	                        { id: 'chatbox', ref: function ref(div) {
+	                            _this6.chatList = div;
+	                          } },
 	                        messages.map(function (message, index) {
 	                          return _react2.default.createElement(
 	                            _reactBootstrap.Row,
@@ -43260,35 +43277,8 @@
 	  }
 
 	  _createClass(ChatLineItem, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      // axios.get('/getUserInterest', { params : {id : this.props.message.user}})
-	      // .then(res => {
-	      //   this.setState({
-	      //     interests: res.data
-	      //   })
-	      // })
-	      // .catch(err => {
-	      //   console.log('error in getting users interest: ', err);
-	      // })
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
-	      // var addPopover = (
-	      //   <Popover id="popover-trigger-click-root-close" title="User Interests">
-	      //     {this.state.interests.map((interest, index) => {
-	      //       return <ul key={index}><InterestsItem int={interest.Interest}/></ul>
-	      //     })}
-	      //     <Button onClick={(e) => {this.props.privateChat(this.props.message.socketId, this.props.message.from)}}>Invite to Private Chat</Button>
-	      //   </Popover>
-	      // );
-	      //     <div id='message'>
-	      //   <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={addPopover}>
-	      //         <b>{this.props.message.from}</b>
-	      //   </OverlayTrigger>: {this.props.message.body}
-	      // </div>
-
 	      return _react2.default.createElement(
 	        'div',
 	        null,
