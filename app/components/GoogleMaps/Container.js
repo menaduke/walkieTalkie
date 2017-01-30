@@ -10,8 +10,8 @@ import invariant from 'invariant'
 const mapStyles = {
   container: {
     position: 'absolute',
-    width: '100%',
-    height: '100%'
+    width: '800px',
+    height: '800px'
   },
   map: {
     position: 'absolute',
@@ -291,13 +291,7 @@ export class Container extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            activeUsersOnline: [
-                {lat: 33.986414, lng: -118.385622},
-                {lat: 34.048506, lng: -118.308840},
-                {lat: 34.028053, lng: -118.337209},
-                {lat: 34.014123, lng: -118.435283},
-                {lat: 33.966562, lng: -118.416836}
-            ]
+            activeUsersOnline: this.props.locations
         }
     }
 
