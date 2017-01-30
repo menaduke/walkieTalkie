@@ -241,7 +241,7 @@ class Chatroom extends Component {
     } else {
       roomTitle = "Private Chat";
     }
-
+    var UserListStyle={maxWidth: 100, margin: '0 auto 10px'}
       return (
       <div>
         <Modal show={this.state.showRequest} dialogClassName="custom-modal">
@@ -268,10 +268,10 @@ class Chatroom extends Component {
         <Grid>
           <Row>
             <Col xs={12} md={12}>
-            <Panel header={roomTitle}>
+            <Panel className="outerPanel" header={roomTitle}>
               <div id="fixedPanel">
                 <Row>
-                  <Col xs={2} md={2}>
+                  <Col style={UserListStyle} xs={2} md={2}>
                     <div>
                       {
                         this.state.roommates.map(user => {

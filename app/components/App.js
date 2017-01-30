@@ -5,6 +5,7 @@ import ViewNavBar from './ViewNavbar.js';
 import Chatroom from './Chatroom.js';
 import ChatSelection from './ChatSelection.js';
 
+
 class App extends React.Component {
   constructor(props){
     super(props)
@@ -15,7 +16,8 @@ class App extends React.Component {
       roomSearch : null,
       login_signup_view : true,
       chat_view : false,
-      mounted : false
+      mounted : false,
+      map_view : false
     }
     this.componentWillMount = this.componentWillMount.bind(this);
     this.handleUserSignupLogin = this.handleUserSignupLogin.bind(this);
@@ -23,6 +25,7 @@ class App extends React.Component {
     this.handleChatSelection = this.handleChatSelection.bind(this);
     this.handleChatExit = this.handleChatExit.bind(this);
     this.handleRoomChange = this.handleRoomChange.bind(this);
+    this.handleMapView = this.handleMapView.bind(this);
   }
 
   componentWillMount(){
@@ -38,7 +41,7 @@ class App extends React.Component {
           login_signup_view : false,
           chat_view : true
         })
-      } else {
+      } else { 
         this.setState({
           userId : res.data.id,
           name : res.data.firstname,
@@ -110,6 +113,12 @@ class App extends React.Component {
  handleRoomChange(newRoom) {
    this.setState({
      roomId : newRoom,
+   })
+ }
+
+ handleMapView(){
+   this.setState({
+     map_view : !this.state.map_view
    })
  }
 

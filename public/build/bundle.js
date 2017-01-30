@@ -21555,7 +21555,8 @@
 	      roomSearch: null,
 	      login_signup_view: true,
 	      chat_view: false,
-	      mounted: false
+	      mounted: false,
+	      map_view: false
 	    };
 	    _this.componentWillMount = _this.componentWillMount.bind(_this);
 	    _this.handleUserSignupLogin = _this.handleUserSignupLogin.bind(_this);
@@ -21563,6 +21564,7 @@
 	    _this.handleChatSelection = _this.handleChatSelection.bind(_this);
 	    _this.handleChatExit = _this.handleChatExit.bind(_this);
 	    _this.handleRoomChange = _this.handleRoomChange.bind(_this);
+	    _this.handleMapView = _this.handleMapView.bind(_this);
 	    return _this;
 	  }
 
@@ -21654,6 +21656,13 @@
 	    value: function handleRoomChange(newRoom) {
 	      this.setState({
 	        roomId: newRoom
+	      });
+	    }
+	  }, {
+	    key: 'handleMapView',
+	    value: function handleMapView() {
+	      this.setState({
+	        map_view: !this.state.map_view
 	      });
 	    }
 	  }, {
@@ -42495,19 +42504,19 @@
 	      return _react2.default.createElement(
 	        _reactBootstrap.Navbar,
 	        { inverse: true, collapseOnSelect: true },
+	        _react2.default.createElement(
+	          _reactBootstrap.Navbar.Header,
+	          null,
+	          _react2.default.createElement(
+	            _reactBootstrap.Navbar.Brand,
+	            null,
+	            'walkieTalkie'
+	          ),
+	          _react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
+	        ),
 	        this.props.userId ? _react2.default.createElement(
 	          'div',
 	          null,
-	          _react2.default.createElement(
-	            _reactBootstrap.Navbar.Header,
-	            null,
-	            _react2.default.createElement(
-	              _reactBootstrap.Navbar.Brand,
-	              null,
-	              'walkieTalkie'
-	            ),
-	            _react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
-	          ),
 	          _react2.default.createElement(
 	            _reactBootstrap.Navbar.Collapse,
 	            null,
@@ -42523,6 +42532,11 @@
 	                _reactBootstrap.NavItem,
 	                { onClick: this.toggleModal },
 	                'Interest'
+	              ),
+	              _react2.default.createElement(
+	                _reactBootstrap.NavItem,
+	                { onClick: this.props.toggleMap },
+	                'Map'
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -43071,7 +43085,7 @@
 	      } else {
 	        roomTitle = "Private Chat";
 	      }
-
+	      var UserListStyle = { maxWidth: 100, margin: '0 auto 10px' };
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -43147,7 +43161,7 @@
 	              { xs: 12, md: 12 },
 	              _react2.default.createElement(
 	                _reactBootstrap.Panel,
-	                { header: roomTitle },
+	                { className: 'outerPanel', header: roomTitle },
 	                _react2.default.createElement(
 	                  'div',
 	                  { id: 'fixedPanel' },
@@ -43156,7 +43170,7 @@
 	                    null,
 	                    _react2.default.createElement(
 	                      _reactBootstrap.Col,
-	                      { xs: 2, md: 2 },
+	                      { style: UserListStyle, xs: 2, md: 2 },
 	                      _react2.default.createElement(
 	                        'div',
 	                        null,
@@ -43230,75 +43244,37 @@
 /* 463 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	        value: true
 	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _axios = __webpack_require__(179);
-
-	var _axios2 = _interopRequireDefault(_axios);
-
-	var _UserClickInterestsView = __webpack_require__(464);
-
-	var _UserClickInterestsView2 = _interopRequireDefault(_UserClickInterestsView);
-
-	var _reactBootstrap = __webpack_require__(206);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ChatLineItem = function (_Component) {
-	  _inherits(ChatLineItem, _Component);
-
-	  function ChatLineItem(props) {
-	    _classCallCheck(this, ChatLineItem);
-
-	    var _this = _possibleConstructorReturn(this, (ChatLineItem.__proto__ || Object.getPrototypeOf(ChatLineItem)).call(this, props));
-
-	    _this.state = {
-	      interests: []
-	    };
-	    //bind all functions here
-	    _this.componentDidMount = _this.componentDidMount.bind(_this);
-	    return _this;
-	  }
-
-	  _createClass(ChatLineItem, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          _react2.default.createElement(
-	            'strong',
-	            null,
-	            this.props.message.from,
-	            ': '
-	          ),
-	          this.props.message.body
-	        )
-	      );
-	    }
-	  }]);
-
-	  return ChatLineItem;
-	}(_react.Component);
+	var ChatLineItem = function ChatLineItem(_ref) {
+	        var message = _ref.message;
+	        return _react2.default.createElement(
+	                "div",
+	                null,
+	                _react2.default.createElement(
+	                        "p",
+	                        { className: "talktext" },
+	                        _react2.default.createElement(
+	                                "strong",
+	                                null,
+	                                " ",
+	                                message.from,
+	                                ": "
+	                        ),
+	                        message.body
+	                )
+	        );
+	};
 
 	exports.default = ChatLineItem;
 

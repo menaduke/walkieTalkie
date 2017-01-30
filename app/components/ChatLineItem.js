@@ -1,28 +1,10 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import InterestsItem from './UserClickInterestsView'
-import { Popover } from 'react-bootstrap';
-import { OverlayTrigger } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
-import { Col } from 'react-bootstrap';
 
-class ChatLineItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      interests: []
-    }
-  //bind all functions here
-  this.componentDidMount = this.componentDidMount.bind(this);
-  }
+import React from 'react'
 
-  render() {
-    return (
-      <div>
-        <p><strong>{this.props.message.from}: </strong>{this.props.message.body}</p>
-      </div>
-    )
-  }
-}
+var ChatLineItem = ({message}) => (
+        <div >
+        <p className ="talktext"><strong> {message.from}: </strong>{message.body}</p>
+        </div>
+);
 
-export default ChatLineItem;
+export default ChatLineItem
