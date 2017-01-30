@@ -1,9 +1,11 @@
 import React from 'react'
 
 var UserInterestsItemized = ({int}) => (
-  <div>
-    <li>{int}</li>
-  </div>
+<div className="int-list">
+   <ul>
+       <li>{int}</li>
+   </ul>
+ </div>
 );
 
 export default UserInterestsItemized

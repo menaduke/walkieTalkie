@@ -42856,15 +42856,6 @@
 	          onHide: this.props.toggleModal,
 	          dialogClassName: 'custom-map-modal' },
 	        _react2.default.createElement(
-	          _reactBootstrap.Modal.Header,
-	          { closeButton: true },
-	          _react2.default.createElement(
-	            _reactBootstrap.Modal.Title,
-	            { id: 'contained-modal-title-lg' },
-	            'Active Users'
-	          )
-	        ),
-	        _react2.default.createElement(
 	          _reactBootstrap.Modal.Body,
 	          null,
 	          _react2.default.createElement(_Container2.default, { locations: this.state.locations })
@@ -45294,6 +45285,8 @@
 	      //join a room upon connection
 	      this.socket.emit('join room', this.props.roomId);
 
+	      this.socket.emit('announce join', { room: this.props.roomId, user: this.props.name });
+
 	      this.socket.on('update user list', function () {
 	        _this2.getRoommates();
 	      });
@@ -45339,7 +45332,10 @@
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
-	      this.socket.emit('leaveRoom', this.props.roomId);
+	      this.socket.emit('leaveRoom', {
+	        room: this.props.roomId,
+	        user: this.props.name
+	      });
 	    }
 
 	    //join new room when the new props (roomId) have been passed down
@@ -45352,6 +45348,9 @@
 	        this.getRoommates(nextProps.roomId);
 	      }
 	    }
+
+	    //scrolls to bottom when new message is received or sent
+
 	  }, {
 	    key: 'scrollToBottom',
 	    value: function scrollToBottom() {
@@ -45362,7 +45361,7 @@
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
+	    value: function componentDidUpdate(prevProps, prevState) {
 	      this.scrollToBottom();
 	    }
 
@@ -45442,7 +45441,10 @@
 	      var _this4 = this;
 
 	      //leave current room before joining new room
-	      this.socket.emit('leaveRoom', this.props.roomId);
+	      this.socket.emit('leaveRoom', {
+	        room: this.props.roomId,
+	        user: this.props.name
+	      });;
 	      var priv = this.state.pcData;
 	      //logging out user from active users to join private room
 	      _axios2.default.post('/privateRoom', { id: priv.privateRoom }).then(function (res) {
@@ -45480,7 +45482,10 @@
 	      var _this5 = this;
 
 	      //leave current room before joining new private room
-	      this.socket.emit('leaveRoom', this.props.roomId);
+	      this.socket.emit('leaveRoom', {
+	        room: this.props.roomId,
+	        user: this.props.name
+	      });
 	      var priv = this.state.pcData;
 	      //request to logout as active user to join a private chat
 	      _axios2.default.post('/privateRoom', { id: priv.privateRoom }).then(function (res) {
@@ -45841,10 +45846,10 @@
 /* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -45854,16 +45859,20 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var UserInterestsItemized = function UserInterestsItemized(_ref) {
-	  var int = _ref.int;
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'li',
-	      null,
-	      int
-	    )
-	  );
+	    var int = _ref.int;
+	    return _react2.default.createElement(
+	        "div",
+	        { className: "int-list" },
+	        _react2.default.createElement(
+	            "ul",
+	            null,
+	            _react2.default.createElement(
+	                "li",
+	                null,
+	                int
+	            )
+	        )
+	    );
 	};
 
 	exports.default = UserInterestsItemized;

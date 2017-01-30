@@ -31,9 +31,6 @@ class MapModal extends Component {
         <Modal show={this.props.show} 
         onHide={this.props.toggleModal} 
         dialogClassName="custom-map-modal">
-          <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-lg">Active Users</Modal.Title>
-          </Modal.Header>
           <Modal.Body>
             <Container locations={this.state.locations}/>
           </Modal.Body>

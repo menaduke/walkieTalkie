@@ -109,3 +109,11 @@ button {
 }
 
 
+.model-title-interest {
+   font-size: 19px;
+   text-align: center;
+}
+
+.int-list ul {
+   list-style: none;
+}
