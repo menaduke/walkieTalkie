@@ -42512,7 +42512,7 @@
 	          null,
 	          _react2.default.createElement(
 	            _reactBootstrap.Navbar.Brand,
-	            null,
+	            { onClick: this.props.home },
 	            'walkieTalkie'
 	          ),
 	          _react2.default.createElement(_reactBootstrap.Navbar.Toggle, null)
@@ -42526,11 +42526,6 @@
 	            _react2.default.createElement(
 	              _reactBootstrap.Nav,
 	              null,
-	              _react2.default.createElement(
-	                _reactBootstrap.NavItem,
-	                { onClick: this.props.home },
-	                'Home'
-	              ),
 	              _react2.default.createElement(
 	                _reactBootstrap.NavItem,
 	                { onClick: this.toggleModal },

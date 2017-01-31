@@ -32,14 +32,13 @@ class ViewNavBar extends Component {
   return (
   <Navbar inverse collapseOnSelect>
     <Navbar.Header>
-      <Navbar.Brand>walkieTalkie</Navbar.Brand>
+      <Navbar.Brand onClick={this.props.home}>walkieTalkie</Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>
       {this.props.userId ?
         <div>    
           <Navbar.Collapse>
             <Nav>
-              <NavItem onClick={this.props.home}>Home</NavItem>
               <NavItem onClick={this.toggleModal}>Interest</NavItem>
               <NavItem onClick={this.toggleMapModal}>Map</NavItem>
             </Nav>
