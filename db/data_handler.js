@@ -275,7 +275,7 @@ module.exports.findCommonUser = (user, cb) => {
                   cb(false, foundUsers[0]['Room'], commonInterests);
                 })
                 .catch(error => {
-                  cbb(error);
+                  cb(error);
                 })
               })
               .catch(error => {
