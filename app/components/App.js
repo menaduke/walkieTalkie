@@ -4,6 +4,7 @@ import LoginSignupView from './LoginSignupView.js';
 import ViewNavBar from './ViewNavbar.js';
 import Chatroom from './Chatroom.js';
 import ChatSelection from './ChatSelection.js';
+import Dashboard from './Dashboard.js'
 
 
 class App extends React.Component {
@@ -16,7 +17,8 @@ class App extends React.Component {
       roomSearch : null,
       login_signup_view : true,
       chat_view : false,
-      mounted : false
+      mounted : false,
+      dashboard_view : false
     }
     this.componentWillMount = this.componentWillMount.bind(this);
     this.handleUserSignupLogin = this.handleUserSignupLogin.bind(this);
@@ -24,6 +26,7 @@ class App extends React.Component {
     this.handleChatSelection = this.handleChatSelection.bind(this);
     this.handleChatExit = this.handleChatExit.bind(this);
     this.handleRoomChange = this.handleRoomChange.bind(this);
+    this.handleDashboardClick = this.handleDashboardClick.bind(this);
   }
 
   componentWillMount(){
@@ -39,7 +42,7 @@ class App extends React.Component {
           login_signup_view : false,
           chat_view : true
         })
-      } else { 
+      } else {
         this.setState({
           userId : res.data.id,
           name : res.data.firstname,
@@ -107,29 +110,40 @@ class App extends React.Component {
    }
  }
 
+ handleDashboardClick() {
+   console.log('dashboard clicked, dashbord view is', this.state.dashboard_view)
+   this.setState({
+     dashboard_view: true
+   })
+ }
+
  handleRoomChange(newRoom) {
    this.setState({
      roomId : newRoom,
    })
+
  }
 
 
   render() {
     return (
       <div>
-        <ViewNavBar logout = {this.handleUserLogout} 
-                    home = {this.handleChatExit} 
-                    userId = {this.state.userId}/>
+        <ViewNavBar logout = {this.handleUserLogout}
+                    home = {this.handleChatExit}
+                    userId = {this.state.userId}
+                    handleDashboardClick = {this.handleDashboardClick}/>
        {
-         this.state.mounted ? 
-         (this.state.login_signup_view ? 
+         this.state.mounted ?
+         (this.state.login_signup_view ?
          (<LoginSignupView userSignupLogin = {this.handleUserSignupLogin}/>) :
-         (this.state.chat_view ? <Chatroom roomChange = {this.handleRoomChange} 
-                                           userId = {this.state.userId} 
-                                           roomId = {this.state.roomId} 
-                                           name = {this.state.name} 
-                                           searchResults = {this.state.roomSearch}/> 
-         : < ChatSelection selectRoom = {this.handleChatSelection}/>))  
+         (this.state.chat_view ? <Chatroom roomChange = {this.handleRoomChange}
+                                           userId = {this.state.userId}
+                                           roomId = {this.state.roomId}
+                                           name = {this.state.name}
+                                           searchResults = {this.state.roomSearch}/>
+         :
+         this.state.dashboard_view ? <Dashboard/>
+         : <ChatSelection selectRoom = {this.handleChatSelection}/>))
          :(<div></div>)
        }
       </div>

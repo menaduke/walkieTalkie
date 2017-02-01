@@ -36,11 +36,13 @@ class ViewNavBar extends Component {
       <Navbar.Toggle />
     </Navbar.Header>
       {this.props.userId ?
-        <div>    
+        <div>
           <Navbar.Collapse>
             <Nav>
               <NavItem onClick={this.toggleModal}>Interest</NavItem>
               <NavItem onClick={this.toggleMapModal}>Map</NavItem>
+              <NavItem onClick={this.props.handleDashboardClick}>Dashboard</NavItem>
+
             </Nav>
             <Nav pullRight>
               <NavItem onClick={this.props.logout}>Logout</NavItem>
@@ -48,15 +50,15 @@ class ViewNavBar extends Component {
           </Navbar.Collapse>
           <div>
         {
-          this.state.show ? 
-          (<UserInterests show={this.state.show} 
-                          user={this.props.userId} 
+          this.state.show ?
+          (<UserInterests show={this.state.show}
+                          user={this.props.userId}
                           toggleModal={this.toggleModal} />)
           : (<div></div>)
         } </div>
         <div>
         {
-          this.state.showMap ? 
+          this.state.showMap ?
             <MapModal show={this.state.showMap} toggleModal={this.toggleMapModal} /> : (<div></div>)
         }
         </div>
