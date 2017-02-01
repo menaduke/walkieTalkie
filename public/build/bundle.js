@@ -21532,6 +21532,10 @@
 
 	var _ChatSelection2 = _interopRequireDefault(_ChatSelection);
 
+	var _Dashboard = __webpack_require__(540);
+
+	var _Dashboard2 = _interopRequireDefault(_Dashboard);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21555,7 +21559,8 @@
 	      roomSearch: null,
 	      login_signup_view: true,
 	      chat_view: false,
-	      mounted: false
+	      mounted: false,
+	      dashboard_view: false
 	    };
 	    _this.componentWillMount = _this.componentWillMount.bind(_this);
 	    _this.handleUserSignupLogin = _this.handleUserSignupLogin.bind(_this);
@@ -21563,6 +21568,7 @@
 	    _this.handleChatSelection = _this.handleChatSelection.bind(_this);
 	    _this.handleChatExit = _this.handleChatExit.bind(_this);
 	    _this.handleRoomChange = _this.handleRoomChange.bind(_this);
+	    _this.handleDashboardClick = _this.handleDashboardClick.bind(_this);
 	    return _this;
 	  }
 
@@ -21649,6 +21655,14 @@
 	      }
 	    }
 	  }, {
+	    key: 'handleDashboardClick',
+	    value: function handleDashboardClick() {
+	      console.log('dashboard clicked, dashbord view is', this.state.dashboard_view);
+	      this.setState({
+	        dashboard_view: true
+	      });
+	    }
+	  }, {
 	    key: 'handleRoomChange',
 	    value: function handleRoomChange(newRoom) {
 	      this.setState({
@@ -21663,12 +21677,13 @@
 	        null,
 	        _react2.default.createElement(_ViewNavbar2.default, { logout: this.handleUserLogout,
 	          home: this.handleChatExit,
-	          userId: this.state.userId }),
+	          userId: this.state.userId,
+	          handleDashboardClick: this.handleDashboardClick }),
 	        this.state.mounted ? this.state.login_signup_view ? _react2.default.createElement(_LoginSignupView2.default, { userSignupLogin: this.handleUserSignupLogin }) : this.state.chat_view ? _react2.default.createElement(_Chatroom2.default, { roomChange: this.handleRoomChange,
 	          userId: this.state.userId,
 	          roomId: this.state.roomId,
 	          name: this.state.name,
-	          searchResults: this.state.roomSearch }) : _react2.default.createElement(_ChatSelection2.default, { selectRoom: this.handleChatSelection }) : _react2.default.createElement('div', null)
+	          searchResults: this.state.roomSearch }) : this.state.dashboard_view ? _react2.default.createElement(_Dashboard2.default, null) : _react2.default.createElement(_ChatSelection2.default, { selectRoom: this.handleChatSelection }) : _react2.default.createElement('div', null)
 	      );
 	    }
 	  }]);
@@ -42535,6 +42550,11 @@
 	                _reactBootstrap.NavItem,
 	                { onClick: this.toggleMapModal },
 	                'Map'
+	              ),
+	              _react2.default.createElement(
+	                _reactBootstrap.NavItem,
+	                { onClick: this.props.handleDashboardClick },
+	                'Dashboard'
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -54838,6 +54858,81 @@
 	/******/ ])
 	});
 	;
+
+/***/ },
+/* 540 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _ChatLineItem = __webpack_require__(483);
+
+	var _ChatLineItem2 = _interopRequireDefault(_ChatLineItem);
+
+	var _UserItem = __webpack_require__(484);
+
+	var _UserItem2 = _interopRequireDefault(_UserItem);
+
+	var _ChatJoinModal = __webpack_require__(486);
+
+	var _ChatJoinModal2 = _interopRequireDefault(_ChatJoinModal);
+
+	var _socket = __webpack_require__(487);
+
+	var _socket2 = _interopRequireDefault(_socket);
+
+	var _axios = __webpack_require__(179);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	var _reactBootstrap = __webpack_require__(206);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Dashboard = function (_Component) {
+	  _inherits(Dashboard, _Component);
+
+	  function Dashboard(props) {
+	    _classCallCheck(this, Dashboard);
+
+	    return _possibleConstructorReturn(this, (Dashboard.__proto__ || Object.getPrototypeOf(Dashboard)).call(this, props));
+	  }
+
+	  _createClass(Dashboard, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'hello world'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Dashboard;
+	}(_react.Component);
+
+	exports.default = Dashboard;
 
 /***/ }
 /******/ ]);
