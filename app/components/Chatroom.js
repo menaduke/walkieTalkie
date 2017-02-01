@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import ChatLine from './ChatLineItem';
 import UserItem from './UserItem';
-import ChatJoinModal from './ChatJoinModal.js'
+import ChatJoinModal from './ChatJoinModal.js';
+
+//i made this
+import RenderImage from './RenderImage.js';
+import RenderYoutube from './RenderYoutube.js';
+
 import io from 'socket.io-client';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
@@ -14,6 +19,12 @@ import { Panel } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { FormGroup } from 'react-bootstrap';
 import { FormControl } from 'react-bootstrap';
+import { Thumbnail } from 'react-bootstrap';
+
+import Youtube from 'react-youtube';
+import YoutubePlayer from 'react-youtube-player';
+
+var URL = require('url-parse');
 
 class Chatroom extends Component {
   constructor(props){
@@ -139,12 +150,34 @@ class Chatroom extends Component {
   }
 
   //handle new message input
-
+  
   handleNewMessage(event) {
+
+
+    var url = new URL(event.target.value);
+    console.log(url);
+    console.log(url.query.slice(3,url.query.length))
+
+    // //regex magic
+    if( /\.(jpg|gif|png)$/.test(event.target.value) ) {
+            this.setState({
+              newMessage: <RenderImage value={event.target.value} />
+            })
+    } 
+    else if (url.host === "www.youtube.com") 
+    {
+            this.setState({
+              newMessage: <RenderYoutube value={event.target.value} />
+            })
+
+    } 
+    else {
     this.setState({
       newMessage: event.target.value
     })
+    }
   };
+
 
   //handle all message submissions
   handleMessageSubmit(event) {
@@ -315,7 +348,11 @@ class Chatroom extends Component {
                   <Col xsOffset={3} mdOffset={2} xs={9} md={9}>
                     <Form onSubmit={this.handleMessageSubmit}>
                       <FormGroup>
-                        <FormControl type="text" placeholder="Enter a Message" value={this.state.newMessage} onChange={this.handleNewMessage}/>
+                        <FormControl type="text" placeholder="Enter a Message" value={this.state.newMessage} onChange={this.handleNewMessage}
+                        />
+                        <div onChange={this.handleNewMessage} >
+                        w.e
+                        </div>
                       </FormGroup>
                     </Form>
                   </Col>

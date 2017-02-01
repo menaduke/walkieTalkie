@@ -8,7 +8,7 @@
     "node": "7.2.1"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "webpack --watch | node server.js",
     "webpack": "./node_modules/.bin/webpack -d --watch",
     "test": "mocha"
   },
@@ -29,8 +29,12 @@
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
+    "react-native-link-preview": "^1.0.5",
+    "react-youtube": "^7.3.0",
+    "react-youtube-player": "^0.3.3",
     "sequelize": "^3.29.0",
     "socket.io": "^1.7.2",
+    "url-parse": "^1.1.7",
     "webpack": "^1.14.0"
   },
   "devDependencies": {
